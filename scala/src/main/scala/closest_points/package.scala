@@ -54,18 +54,30 @@ package object closest_points {
   }
 
   def globalSolution(candidates: Seq[PyElement], partialSolution: PointDistance): PointDistance = {
-    var minDistance = partialSolution.d
-    var closestPoints: (Point, Point) = (partialSolution.p1, partialSolution.p2)
-    for (i <- candidates.indices) {
-      for (j <- i + 1 until min(candidates.length, 16)) {
-        val d = distance(candidates(i).p, candidates(j).p)
-        if (d < minDistance) {
-          minDistance = d
-          closestPoints = (candidates(i).p, candidates(j).p)
+
+    // this bound turns into linear the otherwise quadratic brute-force algorithm
+    val POINTS_AHEAD_TO_EXAMINE = 15
+    def solution(P: Seq[Point]): PointDistance = {
+      if(P.length == 2) {
+        PointDistance(P(0), P(1), distance(P(0), P(1)))
+      }
+      else {
+        val tailSolution = solution(P.tail)
+        val (p, d) = P.tail.take(POINTS_AHEAD_TO_EXAMINE).foldLeft((P.tail.head, Double.MaxValue)) { case (selectedPointDistance, nextPoint) =>
+          val d = distance(P.head, nextPoint)
+          if(d < selectedPointDistance._2) (nextPoint, d) else selectedPointDistance
         }
+        if(d < tailSolution.d) {
+          PointDistance(P.head, p, d)
+        } else
+          tailSolution
       }
     }
-    PointDistance(closestPoints._1, closestPoints._2, minDistance)
+
+    if(candidates.length < 2)
+      partialSolution
+    else
+      List(partialSolution, solution(candidates.map(_.p))).minBy(_.d)
   }
 
   def closestPoints(Px: Seq[Point], Py: Seq[PyElement]): PointDistance = {
