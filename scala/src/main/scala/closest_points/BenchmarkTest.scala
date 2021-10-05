@@ -2,6 +2,8 @@ package closest_points
 
 import org.scalameter._
 
+import scala.util.Random
+
 object BenchmarkTest {
 
   val standardConfig = config(
@@ -22,4 +24,11 @@ object BenchmarkTest {
     println(s"MultithreadSolution8 ${multithreadSolution8.value} ${multithreadSolution8.units}")
   }
 
+  def randomSample(size: Int): Seq[Point] = {
+    val rand = new Random
+    val sample_space_size = size * 100
+    val x = Range(0,size).map(_ => rand.nextInt(sample_space_size))
+    val y = Range(0,size).map(_ => rand.nextInt(sample_space_size))
+    x.zip(y).map{case (x,y) => Point(x,y)}
+  }
 }

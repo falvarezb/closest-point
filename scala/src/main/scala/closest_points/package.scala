@@ -95,31 +95,4 @@ package object closest_points {
       globalSolution(getCandidatesFromDifferentHalves(lx.last, Py, partialSolution.d), partialSolution)
     }
   }
-
-  def readTestFile(fileName: String): Seq[Point] = {
-    val channel = FileChannel.open(Paths.get(fileName), StandardOpenOption.READ)
-    import java.nio.ByteBuffer
-    // allocate memory to contain the whole file: downcasting!!
-    val fileSize = channel.size().toInt
-    val byteBuffer = ByteBuffer.allocate(fileSize)
-    byteBuffer.order(ByteOrder.nativeOrder())
-    channel.read(byteBuffer)
-    byteBuffer.flip()
-    val intBuffer = byteBuffer.asIntBuffer()
-    val numPoints =  fileSize/8
-    val P: ListBuffer[Point] = ListBuffer()
-    for(_ <- 0.until(numPoints)) {
-      P.append(Point(intBuffer.get(), intBuffer.get()))
-    }
-    P
-  }
-
-  def randomSample(size: Int): Seq[Point] = {
-    val rand = new Random
-    val sample_space_size = size * 100
-    val x = Range(0,size).map(_ => rand.nextInt(sample_space_size))
-    val y = Range(0,size).map(_ => rand.nextInt(sample_space_size))
-    x.zip(y).map{case (x,y) => Point(x,y)}
-  }
-
 }
