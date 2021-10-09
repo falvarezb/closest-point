@@ -61,7 +61,7 @@ The work to do in each iteration is linear, giving the time O(n).
 
 Run time of recursive algorithm = Run time of recursion process * Run time of work done on each step = O(n*log n).
 
-The __key element__ of the algorithm (something that probably is not sufficiently underscored in the above [explanation]((https://www.cs.cmu.edu/~ckingsf/bioinfo-lectures/closepoints.pdf))) is to have the points sorted by coordinate _y_. 
+The __key element__ of the algorithm (something that probably is not sufficiently underscored in this  [explanation](https://www.cs.cmu.edu/~ckingsf/bioinfo-lectures/closepoints.pdf) is to have the points sorted by coordinate _y_. 
 
 The points get sorted before starting the recursive algorithm and they will remain sorted during the recursion as long as we split the input in a specific way. Basically, we need to keep two arrays of points, each of them sorted by a different coordinate, _x_ and _y_. Furthermore, the points sorted by coordinate _y_ will need to keep a reference to their position in the array sorted by _x_. And that's all, with that in mind, it should be easy to understand the implementation. 
 
@@ -81,6 +81,6 @@ keeping the same notation across the board makes it easy to understand the code.
 
 
 
-## Interesting notes
+## Favourite picks
 
 ### Functional implementation of the brute-force algorithm

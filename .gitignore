@@ -8,6 +8,7 @@ __pycache__/
 .hypothesis/
 .pytest_cache/
 *.pyc
+.python-version
 
 # Log file
 *.log

@@ -63,17 +63,12 @@ class PyElement:
 
 
 def distance(p1: Point, p2: Point) -> float:
-    """
-    each tuple represents a point (x,y) in the plane
-    """
     return math.sqrt((p1.x - p2.x)**2 + (p1.y - p2.y)**2)
 
 
 def quadratic_solution(P) -> PointDistance:
     """
     brute force algorithm, O(n^2)
-
-    points: list of Points
     """
     min_distance = math.inf
     for i in range(len(P)-1):
@@ -151,7 +146,7 @@ def closest_points(Px, Py) -> PointDistance:
     Px: list of points sorted by coordinate x
     Py: list of points sorted by coordinate y
 
-    Recursive function, each iteration halves the input, therefore this recursive function is O(log n)
+    Recursive function, each iteration halves the input
     """
     if len(Px) == 2:
         return PointDistance(Px[0], Px[1], distance(Px[0], Px[1]))
@@ -171,7 +166,7 @@ def nlogn_solution(points):
     """
     divide and conquer algorithm, O(n log n)
 
-    points: list of tuples, each tuple representing a point (x,y) in the plane
+    points: list of points
     """
 
     return closest_points(*sort_points(points))
@@ -244,13 +239,6 @@ def nlogn_solution_par(points, num_processes):
     return PointDistance(Point(solution.p1.x.value, solution.p1.y.value), Point(solution.p2.x.value, solution.p2.y.value), solution.d.value)
 
 
-def read_test_file(file_name):
-    from array import array
-    import struct
-    data = array('i')
-    with open(file_name, 'rb') as f:
-        data.frombytes(f.read())        
-        return [Point(x,y) for x,y in list(struct.iter_unpack('ii', data))]
 
 
 if __name__ == "__main__":
@@ -258,6 +246,14 @@ if __name__ == "__main__":
     from random import sample
     import timeit
     import sys
+
+    def read_test_file(file_name):
+        from array import array
+        import struct
+        data = array('i')
+        with open(file_name, 'rb') as f:
+            data.frombytes(f.read())        
+            return [Point(x,y) for x,y in list(struct.iter_unpack('ii', data))]
 
     def random_sample_test(size):
         x = sample(range(size*100), size)
@@ -269,7 +265,7 @@ if __name__ == "__main__":
 
     def main():
         # P = file_test(sys.argv[1])
-        P = random_sample_test(1000000)
+        P = random_sample_test(10000)
         print(f"nlogn_solution {timeit.timeit(lambda: nlogn_solution(P), number=1)}")
         print(f"nlogn_solution_par 4 {timeit.timeit(lambda: nlogn_solution_par(P, 4), number=1)}")
         print(f"nlogn_solution_par 8 {timeit.timeit(lambda: nlogn_solution_par(P, 8), number=1)}")

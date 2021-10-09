@@ -112,7 +112,7 @@ void assert_points_distance_equal(points_distance p1, points_distance p2)
                 (p1.p1.x == p2.p2.x && p1.p1.y == p2.p2.y && p1.p2.x == p2.p1.x && p1.p2.y == p2.p1.y));
 }
 
-void compare_solutions(points_distance (*func1)(point P[], size_t length, int num_processes), points_distance (*func2)(point P[], size_t length, int num_processes))
+void property_based_testing(points_distance (*func1)(point P[], size_t length, int num_processes), points_distance (*func2)(point P[], size_t length, int num_processes))
 {
     const int max_num_points = 100;
     srand(time(NULL));
@@ -279,17 +279,17 @@ void test_nlogn_multithread(void **state)
 
 void test_nlogn_vs_quadratic(void **state)
 {
-    compare_solutions(nlogn_solution, quadratic_solution);
+    property_based_testing(nlogn_solution, quadratic_solution);
 }
 
 void test_nlogn_vs_multiproc(void **state)
 {
-    compare_solutions(nlogn_solution, nlogn_solution_multiproc);
+    property_based_testing(nlogn_solution, nlogn_solution_multiproc);
 }
 
 void test_multiproc_vs_multithread(void **state)
 {
-    compare_solutions(nlogn_solution_multithread, nlogn_solution_multiproc);
+    property_based_testing(nlogn_solution_multithread, nlogn_solution_multiproc);
 }
 
 int main(int argc, char const *argv[])
