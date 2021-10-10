@@ -89,6 +89,22 @@ def test_right_half_odd(split_odd_number_points_fixture):
     assert newPy == [PyElement(p3, 0), PyElement(p4, 1), PyElement(p5, 2)]
 
 
+def test_quadratic_solution_unstable():
+    '''
+    solution depends on the original order of the points
+    '''
+    assert quadratic_solution([Point(0, 0), Point(0, 1), Point(1, 0)]) == PointDistance(Point(0, 0), Point(0, 1), 1)
+    assert quadratic_solution([Point(0, 0), Point(1, 0), Point(0, 1)]) == PointDistance(Point(0, 0), Point(1, 0), 1)
+
+
+def test_nlogn_solution_stable():
+    '''
+    solution does not depend on the original order of the points
+    '''
+    assert nlogn_solution([Point(0, 0), Point(0, 1), Point(1, 0)]) == PointDistance(Point(0, 0), Point(0, 1), 1)
+    assert nlogn_solution([Point(0, 0), Point(1, 0), Point(0, 1)]) == PointDistance(Point(0, 0), Point(0, 1), 1)
+
+
 def point_strategy(x, y):
     return Point(x, y)
 

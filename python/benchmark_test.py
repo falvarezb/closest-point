@@ -17,9 +17,16 @@ def random_sample_test(size):
 if __name__ == "__main__":
 
     def main():
+        if len(sys.argv) < 2:
+            print("Usage: python benchmark_test.py test_mode [sample_size]")
+            exit(1)
+
         test_mode = sys.argv[1]
-        if test_mode == 'random':
-            P = random_sample_test(sys.argv[2])
+        if test_mode == 'random_sample':
+            if len(sys.argv) < 3:
+                print("Usage: python benchmark_test.py 'random_sample' sample_size")
+                exit(1)
+            P = random_sample_test(int(sys.argv[2]))
         else:
             P = read_test_file(sys.argv[1])
 

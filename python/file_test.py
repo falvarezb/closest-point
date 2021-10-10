@@ -17,6 +17,10 @@ def read_test_file(file_name):
 if __name__ == "__main__":
 
     def main():
+        if len(sys.argv) < 2:
+            print("Usage: python file_test.py filename")
+            exit(1)
+
         P = read_test_file(sys.argv[1])
         solution = nlogn_solution(P)
         print(solution)
