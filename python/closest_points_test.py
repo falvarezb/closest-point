@@ -1,8 +1,11 @@
-import time
 from closest_points_solution import *
 import hypothesis.strategies as st
 from hypothesis import given, settings, note
 import pytest
+from quadratic_sol import quadratic_solution
+from nlogn_sol import nlogn_solution
+from multiproc_sol import nlogn_solution_multiproc
+from util import *
 
 
 @pytest.fixture
@@ -48,7 +51,7 @@ def test_nlogn_repeat_points():
 
 def test_nlogn_solution_par():
     P = [Point(0, 1), Point(0, 3), Point(2, 0), Point(0, 0)]
-    assert nlogn_solution_par(P, 1) == PointDistance(Point(0, 0), Point(0, 1), 1)
+    assert nlogn_solution_multiproc(P, 1) == PointDistance(Point(0, 0), Point(0, 1), 1)
 
 
 def test_sort_points():
@@ -99,7 +102,7 @@ def test_quadratic_vs_nlogn(P):
 @settings(max_examples=100, deadline=None)
 @given(st.lists(st.builds(point_strategy, st.integers(0, 10000), st.integers(0, 10000)), min_size=2, max_size=100, unique=True))
 def test_nlogn_vs_nlogn_par(P):
-    par_sol = nlogn_solution_par(P, 4)
+    par_sol = nlogn_solution_multiproc(P, 4)
     seq_sol = nlogn_solution(P)
     note(f"par_sol={par_sol}")
     note(f"seq_sol={seq_sol}")
