@@ -18,17 +18,23 @@ if __name__ == "__main__":
 
     def main():
         if len(sys.argv) < 2:
-            print("Usage: python benchmark_test.py test_mode [sample_size]")
+            print("Usage: python benchmark_test.py test_mode [sample_size|filename]")
             exit(1)
 
         test_mode = sys.argv[1]
-        if test_mode == 'random_sample':
+        if test_mode == 'random':
             if len(sys.argv) < 3:
-                print("Usage: python benchmark_test.py 'random_sample' sample_size")
+                print("Usage: python benchmark_test.py 'random' sample_size")
                 exit(1)
             P = random_sample_test(int(sys.argv[2]))
+        elif test_mode == 'file':
+            if len(sys.argv) < 3:
+                print("Usage: python benchmark_test.py 'file' filename")
+                exit(1)
+            P = read_test_file(sys.argv[2])
         else:
-            P = read_test_file(sys.argv[1])
+            print("test mode must be one of: 'random', 'file'")
+            exit(1)
 
         print(f"nlogn_solution {timeit.timeit(lambda: nlogn_solution(P), number=1)}")
         print(f"nlogn_solution_par 4 {timeit.timeit(lambda: nlogn_solution_multiproc(P, 4), number=1)}")

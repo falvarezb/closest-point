@@ -1,7 +1,7 @@
 package closest_points
 
+import closest_points.FileTest.readTestFile
 import org.scalameter._
-
 import scala.util.Random
 
 object BenchmarkTest {
@@ -13,8 +13,14 @@ object BenchmarkTest {
   )
 
   def main(args: Array[String]): Unit = {
-    //val P = readTestFile(args(0))
-    val P = randomSample(1000000)
+    val testMode = args(0)
+    val P: Seq[Point] = if(testMode == "random")
+      randomSample(args(1).toInt)
+    else if(testMode == "file")
+      readTestFile(args(1))
+    else
+      throw new IllegalArgumentException
+
     //println(s"QuadraticSolution ${standardConfig withWarmer new Warmer.Default measure {QuadraticSolution.solution(P)}}")
     val nlognSolution = standardConfig withWarmer new Warmer.Default measure {NlognSolution.solution(P)}
     val multithreadSolution4 = standardConfig withWarmer new Warmer.Default measure {MultithreadSolution.solution(P,4)}
