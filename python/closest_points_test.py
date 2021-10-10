@@ -1,4 +1,3 @@
-from closest_points_solution import *
 import hypothesis.strategies as st
 from hypothesis import given, settings, note
 import pytest
