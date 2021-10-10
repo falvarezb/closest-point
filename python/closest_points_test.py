@@ -38,9 +38,19 @@ def test_nlogn_right_half_solution():
     assert nlogn_solution(P) == PointDistance(Point(20, 20), Point(20, 21), 1)
 
 
-def test_nlogn_inter_half_solution():
-    P = [Point(2, -100), Point(0, 0), Point(9, 100), Point(10, 0), Point(11, 100), Point(20, -100), Point(20, 0)]
-    assert nlogn_solution(P) == PointDistance(Point(9, 100), Point(11, 100), 2)
+def test_nlogn_inter_halves_solution():
+    P = [Point(2, -100), Point(0, 0), Point(8, 100), Point(10, 0), Point(12, 100), Point(20, -100), Point(20, 0)]
+    assert nlogn_solution(P) == PointDistance(Point(8, 100), Point(12, 100), 4)
+
+def test_nlogn_inter_halves_solution_two_solutions():
+    '''
+    Possible solutions:
+    1. (8,100),(12,100)
+    2. (9,70),(13,70)
+    Solution corresponding to the point with the lowest coordinate y is selected
+    '''
+    P = [Point(2, -100), Point(0, 0), Point(8, 100), Point(10, 0), Point(12, 100), Point(20, -100), Point(20, 0), Point(9, 70), Point(13, 70)]
+    assert nlogn_solution(P) == PointDistance(Point(9, 70), Point(13, 70), 4)
 
 
 def test_nlogn_repeat_points():
@@ -111,6 +121,7 @@ def point_strategy(x, y):
 
 @given(st.lists(st.builds(point_strategy, st.integers(0, 1000), st.integers(0, 1000)), min_size=2, max_size=100, unique=True))
 def test_quadratic_vs_nlogn(P):
+    # we cannot compare solutions directly (but just distances) as quadratic solutions are not stable
     assert quadratic_solution(P).d == nlogn_solution(P).d
 
 

@@ -9,7 +9,10 @@ object FileTest {
 
   def main(args: Array[String]): Unit = {
     val P = readTestFile(args(0))
-    println(NlognSolution.solution(P))
+    val solution = NlognSolution.solution(P)
+    println(solution)
+    assert(solution == QuadraticSolution.solution(P))
+    assert(solution == MultithreadSolution.solution(P,2))
   }
 
   def readTestFile(fileName: String): Seq[Point] = {
@@ -18,6 +21,7 @@ object FileTest {
     // allocate memory to contain the whole file: downcasting!!
     val fileSize = channel.size().toInt
     val byteBuffer = ByteBuffer.allocate(fileSize)
+    //by default, Buffer order is big endian
     byteBuffer.order(ByteOrder.nativeOrder())
     channel.read(byteBuffer)
     byteBuffer.flip()

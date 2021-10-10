@@ -81,6 +81,23 @@ keeping the same notation across the board makes it easy to understand the code.
 
 
 
-## Favourite picks
+## Favourite picks and lessons learnt
 
-### Functional implementation of the brute-force algorithm
+#### Learnings from PBT
+
+Property-based testing (PBT) is an excellent tool to catch edge cases and to get insights about the inner workings of an application.
+
+When some of the tests failed, I realised that solutions given by the quadratic algorithm are not stable as in, the solution depends on the original order of the points. For instance, given two possible solutions, the one selected is the one corresponding to the pair of points that come first.
+
+On the other hand, solutions given by the _O(n*logn)_ algorithm are stable as they do not depend on the original order of the points.
+
+As a consequence, we cannot just compare the pair of points given by each algorithm. The invariant that remains true though is the distance betwen each pair of points.
+
+__Note:__ in case of multiple possible solutions, our implementation of the _O(n*logn)_ algorithm selects always:
+
+- the pair of points with the lowest value of coordinate _x_ if solutions are in the left and right halves
+- the pair of points with the lowest value of coordinate _y_ if solutions are in the strip around the line dividing left and right halves
+
+### Functional implementation of the brute force algorithm
+
+The Scala version of the quadratic algorithm makes use of recursion and the _fold_ operation in order to avoid state mutations.

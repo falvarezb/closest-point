@@ -9,10 +9,7 @@ import java.math.MathContext
 class ClosestPointsTest extends FunSpec with PropertyChecks {
 
   def assertPointDistance(pd1: PointDistance, pd2: PointDistance): Assertion = {
-    assert(
-      (pd1.p1 == pd2.p1 && pd1.p2 == pd2.p2) ||
-        (pd1.p1 == pd2.p2 && pd1.p2 == pd2.p1)
-    )
+    assert(pd1.p1 == pd2.p1 && pd1.p2 == pd2.p2)
     assert(BigDecimal(pd1.d, new MathContext(2)) == BigDecimal(pd2.d, new MathContext(2)))
   }
 
@@ -135,14 +132,15 @@ class ClosestPointsTest extends FunSpec with PropertyChecks {
 
   def pointsGenerator(): Gen[Seq[Point]] = for {
     len <- Gen.choose(2, 100)
-    x <- Gen.pick(len, 1 to 1000)
-    y <- Gen.pick(len, 1 to 1000)
+    x <- Gen.pick(len, 1 to 10000)
+    y <- Gen.pick(len, 1 to 10000)
   } yield x.zip(y).map{case (x,y) => Point(x,y)}
 
 
   forAll(pointsGenerator()) { P =>
-    assertPointDistance(NlognSolution.solution(P), QuadraticSolution.solution(P))
-    assertPointDistance(NlognSolution.solution(P), MultithreadSolution.solution(P,4))
+    val solution = NlognSolution.solution(P)
+    assert(solution.d == QuadraticSolution.solution(P).d)
+    assert(solution == MultithreadSolution.solution(P,4))
   }
 
 }
