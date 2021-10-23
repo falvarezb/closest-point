@@ -1,5 +1,5 @@
 # Project description
-Implementation of the algorithm to calculate closest pair of points in a 2-dimensional plane in time O(n*log n) as described by _Algorithm Design by Jon Kleinberg, Eva Tardos_.
+Implementation of the algorithm to calculate closest pair of points in a 2-dimensional plane in time _O(n*log n)_ as described by _Algorithm Design by Jon Kleinberg, Eva Tardos_.
 
 Here's an [explanation](https://www.cs.cmu.edu/~ckingsf/bioinfo-lectures/closepoints.pdf) of the algorithm based on the book. It is a [_divide and conquer_](https://en.wikipedia.org/wiki/Divide-and-conquer_algorithm) implementation that relies on some geometrical properties.
 
@@ -54,18 +54,18 @@ In order to compare the implementations across languages, we generate a file wit
 
 
 ## Algorithm details
-As we said, the algorithm to implement is a _divide and conquer_ recursion that runs in time O(n*log n).
+As we said, the algorithm to implement is a _divide and conquer_ recursion that runs in time _O(n*log n)_.
 
-The input is split in two recursively, giving the time O(log n).
-The work to do in each iteration is linear, giving the time O(n).
+The input is split in two recursively, giving the time _O(log n)_.
+The work to do in each iteration is linear, giving the time _O(n)_.
 
-Run time of recursive algorithm = Run time of recursion process * Run time of work done on each step = O(n*log n).
+Run time of recursive algorithm = Run time of recursion process * Run time of work done on each step = _O(n*log n)_.
 
-The __key element__ of the algorithm (something that probably is not sufficiently underscored in this  [explanation](https://www.cs.cmu.edu/~ckingsf/bioinfo-lectures/closepoints.pdf) is to have the points sorted by coordinate _y_. 
+The __key element__ of the algorithm (something that probably is not sufficiently underscored in this  [explanation](https://www.cs.cmu.edu/~ckingsf/bioinfo-lectures/closepoints.pdf)) is to have the points sorted by coordinate _y_. 
 
 The points get sorted before starting the recursive algorithm and they will remain sorted during the recursion as long as we split the input in a specific way. Basically, we need to keep two arrays of points, each of them sorted by a different coordinate, _x_ and _y_. Furthermore, the points sorted by coordinate _y_ will need to keep a reference to their position in the array sorted by _x_. And that's all, with that in mind, it should be easy to understand the implementation. 
 
-Of course, we need to use a sorting algorithm that runs in O(n*log n) like [mergesort](https://en.wikipedia.org/wiki/Merge_sort)
+Of course, we need to use a sorting algorithm that runs in _O(n*log n)_ like [mergesort](https://en.wikipedia.org/wiki/Merge_sort)
 
 ### Notation and terminology
 
@@ -79,6 +79,18 @@ keeping the same notation across the board makes it easy to understand the code.
 - Qx, Qy = left half part of P sorted by coordinates _x_ and _y_ respectively
 - Rx, Ry = right half part of P sorted by coordinates _x_ and _y_ respectively
 
+
+### Details of parallel algorithm
+
+The parallel implementation is based on the [Fork-Join](https://en.wikipedia.org/wiki/Fork–join_model) model, that is very well suited for _divide and conquer_ algorithms.
+
+Given that the algorithm to calculate the closest points is CPU-bound, we need real parallelism and not just concurrency. Therefore, Python's [GIL](https://docs.python.org/3/glossary.html#term-global-interpreter-lock) is not fit for purpose and only a multi-process implementation can take advantage of multiple cores.
+
+On the other hand, multi-process implementation in the JVM is not as straightforward as in Python or C and therefore we opted for the multi-thread approach.
+
+Here's a visual represenation of the parallel algorithm in actio (either multi-thread or multi-process):
+
+![parallel algorithm](images/closest_points_parallel.png)
 
 
 ## Favourite picks and lessons learnt
@@ -95,9 +107,44 @@ As a consequence, we cannot just compare the pair of points given by each algori
 
 __Note:__ in case of multiple possible solutions, our implementation of the _O(n*logn)_ algorithm selects always:
 
-- the pair of points with the lowest value of coordinate _x_ if solutions are in the left and right halves
+- the pair of points with the lowest value of coordinate _x_ if solutions are in the left or right half
 - the pair of points with the lowest value of coordinate _y_ if solutions are in the strip around the line dividing left and right halves
 
 ### Functional implementation of the brute force algorithm
 
 The Scala version of the quadratic algorithm makes use of recursion and the _fold_ operation in order to avoid state mutations.
+
+
+### Tediousness of multi-process implementation in Scala
+
+Multi-process implementation in Scala is based on the Java API. It's remarkable how difficult is to implement the multi-process approach in Java/Scala compared to C and Python.
+
+In C and Python, you can just invoke a function (passing its parameters alongside) in a new process in a similar way to invoking a new thread.
+
+However, in Java/Scala that's not possible. On the contrary, you need to invoke a new `java` or `scala` commmand on a class and write the corresponding parameters as arguments to the command (that will get passed to the program as arguments of the corresponding `main` method)
+
+
+### Deep integration between C and Python
+
+Despite being opposites in terms of high/low level languages, Python and C can integrate very easily in some situations.
+
+For instance, the binary file generated in C with the values of a sequence of random points represented as structs containing 2 integers, can be read easily in Python by using the `struct` module
+
+```
+struct.iter_unpack('ii', data)
+```
+
+Another example is Python's ease to map shared memory between processes in a similar way to C's `mmap` by making use of the object _[Value](https://docs.python.org/3/library/multiprocessing.html#sharing-state-between-processes)_
+
+
+### Testing C version in different environments
+
+After writing and testing my C code in my Mac, I decided to give it a go in a VM running Ubuntu.
+
+To my surprise, I started to get random failures in the multi-process version of the program. For a while I assumed that it was something to do with the functions used to share memory between processes. 
+
+But then I realised that it was a bug in my code as instead of using the function `waitpid`, I was using `wait`! And this bug would manifest as a race condition.
+
+In my Mac it did not happen because it sports 8 cores and all the processes would run in parallel, finishing in the same order as they were started. On the other hand, the VM had 2 cores, resulting in the processes interleaving and originating the race conditions.
+
+The moral: you can never test too much!

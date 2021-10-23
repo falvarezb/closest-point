@@ -53,7 +53,7 @@ void closest_points_multiproc(point Px[], PyElement Py[], size_t length, points_
             errExit("fork");
         case 0: //child: works the left half
             closest_points_multiproc(Px, Ly, left_size, left_result, par_threshold);
-            _exit(EXIT_SUCCESS); // we need to exit here to stop the execution of the inherited stack frames
+            _exit(EXIT_SUCCESS); // we need to exit here to stop the execution
         default: //parent: works the right half
             closest_points_multiproc(Px + right_half_lower_bound, Ry, right_size, right_result, par_threshold);
             pid_t child_pid;
