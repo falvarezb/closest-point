@@ -4,7 +4,7 @@
 int main(int argc, char const *argv[])
 {
     int num_points;
-    struct pointdata pd;
+    struct pointlist pd;
 
     if (argc < 2)
     {

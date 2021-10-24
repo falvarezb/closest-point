@@ -9,7 +9,7 @@ int main(int argc, char const *argv[])
         return EXIT_FAILURE;
     }
 
-    struct pointdata pd = read_test_file(argv[1]);
+    struct pointlist pd = read_test_file(argv[1]);
     points_distance solution = nlogn_solution(pd.P, pd.num_points, -1);
     print_points_distance(solution);
     assert(quadratic_solution(pd.P, pd.num_points, -1).distance == solution.distance);
