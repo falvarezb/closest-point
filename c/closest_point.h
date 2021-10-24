@@ -43,6 +43,11 @@ typedef struct
     int par_threshold;
 } thread_arg;
 
+struct pointdata {
+    size_t num_points;
+    point* P;
+};
+
 #define errExit(msg) do { \
     perror(msg); exit(EXIT_FAILURE); \
 } while (0)
@@ -61,7 +66,10 @@ points_distance closest_points(point Px[], PyElement Py[], size_t length);
 void perf_test_random(points_distance (*func)(point P[], size_t length, int num_processes), size_t num_points, int num_processes);
 void perf_test_file(points_distance (*func)(point P[], size_t length, int num_processes), const char *filename, int num_processes);
 point* rand_point(int min_value, int max_value);
+point *rand_points(size_t num_points);
 void print_points_distance(points_distance p);
+struct pointdata read_test_file(const char *filename);
+double timeit(points_distance (*func)(point P[], size_t length, int num_processes), struct pointdata pd, int num_processes);
 
 
 // =====  SOLUTIONS ====

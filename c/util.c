@@ -208,6 +208,24 @@ point *rand_point(int min_value, int max_value)
     return p;
 }
 
+/**
+ * Return array of 'num_points' random points 
+ */
+point *rand_points(size_t num_points)
+{
+    srand(time(NULL));
+    point *P = malloc(sizeof(point) * num_points);
+    for (size_t i = 0; i < num_points; i++)
+    {
+        // scale factor to expand coordinates space and make point repetition less likely
+        int scale_factor = 100;
+        point *p = rand_point(0, num_points * scale_factor);
+        P[i] = *p;
+        free(p);
+    }
+    return P;
+}
+
 void print_points_distance(points_distance p)
 {
     pid_t pid = getpid();
@@ -254,8 +272,6 @@ void perf_test_random(points_distance (*func)(point P[], size_t length, int num_
  */
 void perf_test_file(points_distance (*func)(point P[], size_t length, int num_processes), const char *filename, int num_processes)
 {
-    //point *P = malloc(sizeof(point) * num_points);
-
     FILE *file = fopen(filename, "rb");
     if (file == NULL)
         errExit("fopen");
@@ -264,7 +280,7 @@ void perf_test_file(points_distance (*func)(point P[], size_t length, int num_pr
     fseek(file, 0, SEEK_END);
     size_t fsize = ftell(file);
     rewind(file);
-    size_t num_points = fsize/8;
+    size_t num_points = fsize / 8;
 
     // allocate memory to contain the whole file:
     point *P = malloc(sizeof(point) * num_points);
@@ -273,10 +289,9 @@ void perf_test_file(points_distance (*func)(point P[], size_t length, int num_pr
 
     // copy the file into the buffer:
     size_t result = fread(P, sizeof(point), num_points, file);
-    if (result != (fsize/8))
+    if (result != (fsize / 8))
         errExit("fread");
     fclose(file);
-    
 
     struct timespec start, finish;
     double elapsed;
@@ -290,5 +305,47 @@ void perf_test_file(points_distance (*func)(point P[], size_t length, int num_pr
     elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
     printf("num_points=%ld, num_processes=%d, time=%.4f seconds\n", num_points, num_processes, elapsed);
     print_points_distance(closest_points);
-    free(P);   
+    free(P);
+}
+
+double timeit(points_distance (*func)(point P[], size_t length, int num_processes), struct pointdata pd, int num_processes)
+{
+    struct timespec start, finish;
+    double elapsed;
+
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    points_distance closest_points = func(pd.P, pd.num_points, num_processes);
+
+    clock_gettime(CLOCK_MONOTONIC, &finish);
+
+    elapsed = (finish.tv_sec - start.tv_sec);
+    elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;    
+    return elapsed;
+}
+
+struct pointdata read_test_file(const char *filename)
+{
+    FILE *file = fopen(filename, "rb");
+    if (file == NULL)
+        errExit("fopen");
+
+    // obtain file size:
+    fseek(file, 0, SEEK_END);
+    size_t fsize = ftell(file);
+    rewind(file);
+
+    // allocate memory to contain the whole file:
+    point *P = malloc(fsize);
+    if (P == NULL)
+        errExit("malloc P");
+
+    // copy the file into the buffer:
+    size_t num_points = fsize / sizeof(point);
+    size_t num_read_points = fread(P, sizeof(point), num_points, file);
+    if (num_read_points != num_points)
+        errExit("fread");
+    fclose(file);
+
+    struct pointdata result = {num_points, P};
+    return result;
 }

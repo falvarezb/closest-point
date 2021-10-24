@@ -8,7 +8,7 @@ from multiproc_sol import nlogn_solution_multiproc
 from file_test import read_test_file
 
 
-def random_sample_test(size):
+def random_sample(size):
     x = sample(range(size*100), size)
     y = sample(range(size*100), size)
     return [Point(x, y) for x, y in list(zip(x, y))]
@@ -26,7 +26,7 @@ if __name__ == "__main__":
             if len(sys.argv) < 3:
                 print("Usage: python benchmark_test.py 'random' sample_size")
                 exit(1)
-            P = random_sample_test(int(sys.argv[2]))
+            P = random_sample(int(sys.argv[2]))
         elif test_mode == 'file':
             if len(sys.argv) < 3:
                 print("Usage: python benchmark_test.py 'file' filename")
