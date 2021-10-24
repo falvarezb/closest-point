@@ -27,6 +27,12 @@ void generate_test_file(const char *filename, size_t num_points)
 
 int main(int argc, char const *argv[])
 {    
+    if (argc < 3)
+    {
+        printf("USAGE: %s filename num_points"), argv[0];
+        return EXIT_FAILURE;
+    }
+
     int num_points = atoi(argv[2]);
     generate_test_file(argv[1], num_points);
     return 0;

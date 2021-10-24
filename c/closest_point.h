@@ -24,7 +24,7 @@ typedef struct
 typedef struct
 {
     point p;
-    int xposition;
+    size_t xposition;
 } PyElement;
 
 typedef struct

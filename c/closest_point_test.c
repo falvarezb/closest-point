@@ -79,7 +79,7 @@ struct testcase repeat_points()
 
 struct testcase randon_number_points()
 { //by construction, we know the expected result
-    int num_points = 10;
+    size_t num_points = 10;
     point *P = malloc(sizeof(point) * num_points);
     for (size_t i = 0; i < num_points - 1; i++)
     {
@@ -121,13 +121,13 @@ void property_based_testing(points_distance (*func1)(point P[], size_t length, i
         size_t length = i;
         point P1[length];
         point P2[length];
-        for (size_t i = 0; i < length; i++)
+        for (size_t j = 0; j < length; j++)
         {
             // scale factor to expand coordinates space and make point repetition less likely
             int scale_factor = 1000;
             point *p = rand_point(0, max_num_points * scale_factor);
-            P1[i] = *p;
-            P2[i] = *p;
+            P1[j] = *p;
+            P2[j] = *p;
             free(p);
         }
         points_distance closest_points1 = func1(P1, length, 4);
@@ -140,10 +140,10 @@ void test_get_candidates_from_different_halves(void **state)
 {
     (void)state; /* unused */
 
-    PyElement p1 = {1, 2};
-    PyElement p2 = {4, 2};
-    PyElement p3 = {3, 2};
-    PyElement p4 = {2, 2};
+    PyElement p1 = {1, 2ul};
+    PyElement p2 = {4, 2ul};
+    PyElement p3 = {3, 2ul};
+    PyElement p4 = {2, 2ul};
     PyElement Py[] = {p1, p2, p3, p4};
     point reference = p4.p;
     size_t length = 4;
@@ -162,10 +162,10 @@ void test_get_candidates_from_different_halves_empty(void **state)
 {
     (void)state; /* unused */
 
-    PyElement p1 = {1, 2};
-    PyElement p2 = {4, 2};
-    PyElement p3 = {3, 2};
-    PyElement p4 = {2, 2};
+    PyElement p1 = {1, 2ul};
+    PyElement p2 = {4, 2ul};
+    PyElement p3 = {3, 2ul};
+    PyElement p4 = {2, 2ul};
     PyElement Py[] = {p1, p2, p3, p4};
     point reference = p4.p;
     size_t length = 4;

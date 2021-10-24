@@ -240,7 +240,7 @@ double timeit(points_distance (*func)(point P[], size_t length, int num_processe
     double elapsed;
 
     clock_gettime(CLOCK_MONOTONIC, &start);
-    points_distance closest_points = func(pd.P, pd.num_points, num_processes);
+    func(pd.P, pd.num_points, num_processes);
 
     clock_gettime(CLOCK_MONOTONIC, &finish);
 

@@ -5,7 +5,7 @@ int main(int argc, char const *argv[])
 {
     if (argc < 2)
     {
-        printf("USAGE: filename [num_points]");
+        printf("USAGE: %s filename"), argv[0];
         return EXIT_FAILURE;
     }
 

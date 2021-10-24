@@ -6,6 +6,8 @@
             "command": "/usr/bin/gcc",
             "args": [
                 "-g",
+                "-Wall",
+                "-Wno-missing-braces ",
                 "-DFAB_MAIN",
                 "${file}",
                 "${fileDirname}/util.c",            
@@ -30,6 +32,8 @@
             "command": "/usr/bin/gcc",
             "args": [
                 "-g",
+                "-Wall",
+                "-Wno-missing-braces ",
                 "-DFAB_MAIN",
                 "${file}",
                 "${fileDirname}/util.c",   
@@ -55,7 +59,9 @@
             "label": "C/C++ macos: test",
             "command": "/usr/bin/gcc",
             "args": [
-                "-g",                                
+                "-g",
+                "-Wall",    
+                "-Wno-missing-braces ",
                 "${workspaceFolder}/c/closest_point_test.c",  
                 "${workspaceFolder}/c/util.c",  
                 "${workspaceFolder}/c/*_sol.c",
@@ -80,7 +86,9 @@
             "label": "C/C++ linux: test",
             "command": "/usr/bin/gcc",
             "args": [
-                "-g",                                
+                "-g",
+                "-Wall",
+                "-Wno-missing-braces ",                               
                 "${workspaceFolder}/c/closest_point_test.c",  
                 "${workspaceFolder}/c/util.c",  
                 "${workspaceFolder}/c/*_sol.c",                
