@@ -13,7 +13,8 @@ struct testcase
     int num_processes;
 };
 
-struct testcase base_case()
+
+struct testcase base_case(void)
 {
     int num_points = 2;
     point p1 = {1, 0};
@@ -24,7 +25,7 @@ struct testcase base_case()
     return (struct testcase){num_points, P, {p1, p2, 1.0}, 4};
 }
 
-struct testcase left_half_solution()
+struct testcase left_half_solution(void)
 {
     int num_points = 7;
     point *P = malloc(sizeof(point) * num_points);
@@ -38,7 +39,7 @@ struct testcase left_half_solution()
     return (struct testcase){num_points, P, {{0, 1}, {1, 5}, 4.12}, 4};
 }
 
-struct testcase right_half_solution()
+struct testcase right_half_solution(void)
 {
     int num_points = 7;
     point *P = malloc(sizeof(point) * num_points);
@@ -52,7 +53,7 @@ struct testcase right_half_solution()
     return (struct testcase){num_points, P, {{20, 20}, {20, 21}, 1}, 4};
 }
 
-struct testcase inter_half_solution()
+struct testcase inter_half_solution(void)
 {
     int num_points = 7;
     point *P = malloc(sizeof(point) * num_points);
@@ -66,7 +67,7 @@ struct testcase inter_half_solution()
     return (struct testcase){num_points, P, {{9, 100}, {11, 100}, 2}, 4};
 }
 
-struct testcase repeat_points()
+struct testcase repeat_points(void)
 { // repeat points
     int num_points = 4;
     point *P = malloc(sizeof(point) * num_points);
@@ -77,7 +78,7 @@ struct testcase repeat_points()
     return (struct testcase){num_points, P, {{3, 9}, {3, 9}, 0}, 4};
 }
 
-struct testcase randon_number_points()
+struct testcase randon_number_points(void)
 { //by construction, we know the expected result
     size_t num_points = 10;
     point *P = malloc(sizeof(point) * num_points);
@@ -140,10 +141,10 @@ void test_get_candidates_from_different_halves(void **state)
 {
     (void)state; /* unused */
 
-    PyElement p1 = {1, 2ul};
-    PyElement p2 = {4, 2ul};
-    PyElement p3 = {3, 2ul};
-    PyElement p4 = {2, 2ul};
+    PyElement p1 = {.p=1, .xposition=2ul};
+    PyElement p2 = {.p=4, .xposition=2ul};
+    PyElement p3 = {.p=3, .xposition=2ul};
+    PyElement p4 = {.p=2, .xposition=2ul};
     PyElement Py[] = {p1, p2, p3, p4};
     point reference = p4.p;
     size_t length = 4;
@@ -162,10 +163,10 @@ void test_get_candidates_from_different_halves_empty(void **state)
 {
     (void)state; /* unused */
 
-    PyElement p1 = {1, 2ul};
-    PyElement p2 = {4, 2ul};
-    PyElement p3 = {3, 2ul};
-    PyElement p4 = {2, 2ul};
+    PyElement p1 = {.p=1, .xposition=2ul};
+    PyElement p2 = {.p=4, .xposition=2ul};
+    PyElement p3 = {.p=3, .xposition=2ul};
+    PyElement p4 = {.p=2, .xposition=2ul};
     PyElement Py[] = {p1, p2, p3, p4};
     point reference = p4.p;
     size_t length = 4;
@@ -207,92 +208,92 @@ void test_sort_points(void **state)
     assert_int_equal((Py + 3)->xposition, 2);
 }
 
-void test_quadratic_repeat(void **state)
+void test_quadratic_repeat(__attribute__ ((unused)) void **state)
 {
     struct testcase tc = repeat_points();
     points_distance closest_points = quadratic_solution(tc.P, tc.length, tc.num_processes);
     assert_points_distance_equal(closest_points, tc.expected);
 }
 
-void test_nlogn_left_half_solution(void **state)
+void test_nlogn_left_half_solution(__attribute__ ((unused)) void **state)
 {
     struct testcase tc = left_half_solution();
     points_distance closest_points = nlogn_solution(tc.P, tc.length, tc.num_processes);
     assert_points_distance_equal(closest_points, tc.expected);
 }
 
-void test_nlogn_right_half_solution(void **state)
+void test_nlogn_right_half_solution(__attribute__ ((unused)) void **state)
 {
     struct testcase tc = right_half_solution();
     points_distance closest_points = nlogn_solution(tc.P, tc.length, tc.num_processes);
     assert_points_distance_equal(closest_points, tc.expected);
 }
 
-void test_nlogn_inter_half_solution(void **state)
+void test_nlogn_inter_half_solution(__attribute__ ((unused)) void **state)
 {
     struct testcase tc = inter_half_solution();
     points_distance closest_points = nlogn_solution(tc.P, tc.length, tc.num_processes);
     assert_points_distance_equal(closest_points, tc.expected);
 }
 
-void test_nlogn_repeat(void **state)
+void test_nlogn_repeat(__attribute__ ((unused)) void **state)
 {
     struct testcase tc = repeat_points();
     points_distance closest_points = nlogn_solution(tc.P, tc.length, tc.num_processes);
     assert_points_distance_equal(closest_points, tc.expected);
 }
 
-void test_nlogn_random_number_points(void **state)
+void test_nlogn_random_number_points(__attribute__ ((unused)) void **state)
 {
     struct testcase tc = randon_number_points();
     points_distance closest_points = nlogn_solution(tc.P, tc.length, tc.num_processes);
     assert_points_distance_equal(closest_points, tc.expected);
 }
 
-void test_nlogn_multiproc_base_case(void **state)
+void test_nlogn_multiproc_base_case(__attribute__ ((unused)) void **state)
 {
     struct testcase tc = base_case();
     points_distance closest_points = nlogn_solution_multiproc(tc.P, tc.length, tc.num_processes);
     assert_points_distance_equal(closest_points, tc.expected);
 }
 
-void test_nlogn_multiproc(void **state)
+void test_nlogn_multiproc(__attribute__ ((unused)) void **state)
 {
     struct testcase tc = left_half_solution();
     points_distance closest_points = nlogn_solution_multiproc(tc.P, tc.length, tc.num_processes);
     assert_points_distance_equal(closest_points, tc.expected);
 }
 
-void test_nlogn_multithread_base_case(void **state)
+void test_nlogn_multithread_base_case(__attribute__ ((unused)) void **state)
 {
     struct testcase tc = base_case();
     points_distance closest_points = nlogn_solution_multithread(tc.P, tc.length, tc.num_processes);
     assert_points_distance_equal(closest_points, tc.expected);
 }
 
-void test_nlogn_multithread(void **state)
+void test_nlogn_multithread(__attribute__ ((unused)) void **state)
 {
     struct testcase tc = left_half_solution();
     points_distance closest_points = nlogn_solution_multithread(tc.P, tc.length, tc.num_processes);
     assert_points_distance_equal(closest_points, tc.expected);
 }
 
-void test_nlogn_vs_quadratic(void **state)
+void test_nlogn_vs_quadratic(__attribute__ ((unused)) void **state)
 {
     property_based_testing(nlogn_solution, quadratic_solution);
 }
 
-void test_nlogn_vs_multiproc(void **state)
+void test_nlogn_vs_multiproc(__attribute__ ((unused)) void **state)
 {
     property_based_testing(nlogn_solution, nlogn_solution_multiproc);
 }
 
-void test_multiproc_vs_multithread(void **state)
+void test_multiproc_vs_multithread(__attribute__ ((unused)) void **state)
 {
     property_based_testing(nlogn_solution_multithread, nlogn_solution_multiproc);
 }
 
-int main(int argc, char const *argv[])
+int main(__attribute__ ((unused)) int argc, __attribute__ ((unused)) char const *argv[])
 {
 
     const struct CMUnitTest tests[] = {

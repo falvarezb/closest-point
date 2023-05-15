@@ -40,7 +40,7 @@ typedef struct
     PyElement* Py;
     size_t length;
     points_distance *result;
-    int par_threshold;
+    size_t par_threshold;
 } thread_arg;
 
 struct pointlist {

@@ -29,7 +29,7 @@ int main(int argc, char const *argv[])
 {    
     if (argc < 3)
     {
-        printf("USAGE: %s filename num_points"), argv[0];
+        printf("USAGE: %s filename num_points", argv[0]);
         return EXIT_FAILURE;
     }
 

@@ -13,7 +13,7 @@
  * physical memory
  * 
  */
-void closest_points_multiproc(point Px[], PyElement Py[], size_t length, points_distance *result, int par_threshold)
+void closest_points_multiproc(point Px[], PyElement Py[], size_t length, points_distance *result, size_t par_threshold)
 {
     if (length == 2)
     { // base case
@@ -115,7 +115,7 @@ void closest_points_multiproc(point Px[], PyElement Py[], size_t length, points_
 points_distance nlogn_solution_multiproc(point P[], size_t length, int num_processes)
 {
     assert(length >= 2);
-    int par_threshold = ceil((float)length / num_processes);
+    size_t par_threshold = ceil((float)length / num_processes);
     points_distance *ptr_result = (points_distance *)malloc(sizeof(points_distance));
     PyElement *Py = (PyElement *)malloc(length * sizeof(PyElement));
     sort_points(P, length, Py);

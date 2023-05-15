@@ -128,7 +128,7 @@ void *closest_points_multithread(void *targs)
 points_distance nlogn_solution_multithread(point P[], size_t length, int num_processes)
 {
     assert(length >= 2);
-    int par_threshold = ceil((float)length / num_processes);
+    size_t par_threshold = ceil((float)length / num_processes);
     points_distance *ptr_result = (points_distance *)malloc(sizeof(points_distance));
     PyElement *Py = (PyElement *)malloc(length * sizeof(PyElement));
     sort_points(P, length, Py);
