@@ -4,12 +4,12 @@ BUILD_DIR = out
 LOG_DIR = logs
 OUTPUT_DIRS = ${BUILD_DIR} ${LOG_DIR}
 
-CC = gcc
-CFLAGS = -g -Wall -Wno-missing-braces -Wextra -Wshadow -Wpedantic -std=c11
+CC = /usr/local/opt/llvm/bin/clang #this compiler supports OpenMP
+CFLAGS = -I/usr/local/include -g -Wall -Wno-missing-braces -Wextra -Wshadow -Wpedantic -std=c11 -fopenmp #comment out openmp flag to run sequential version of nlogn_solution
 LDFLAGS = 
 SRCS_PROD := quadratic_sol.c nlogn_sol.c multiproc_sol.c multithread_sol.c util.c
 OBJS_PROD := $(addprefix $(BUILD_DIR)/, $(patsubst %.c,%.o,$(SRCS_PROD)))
-LDLIBS = 
+LDLIBS =
 
 
 #if __linux__
@@ -35,7 +35,7 @@ unittest: $(BUILD_DIR)/closest_point_test
 	$(VALGRIND) ./$^
 
 $(BUILD_DIR)/closest_point_test: $(OBJS_PROD) ${BUILD_DIR}/closest_point_test.o
-	$(LINK.c) $^ -o $@ $(LDLIBS) -lcmocka
+	$(LINK.c) $^ -o $@ $(LDLIBS) -L/usr/local/opt/cmocka/lib -lcmocka
 
 filetest: $(BUILD_DIR)/file_test
 	$(VALGRIND) ./$^ $(filename)

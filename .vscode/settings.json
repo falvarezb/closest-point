@@ -5,6 +5,8 @@
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
     "files.associations": {
-        "closest_point.h": "c"
+        "closest_point.h": "c",
+        "stdbool.h": "c",
+        "cmocka.h": "c"
     }
 }

@@ -1,11 +1,17 @@
 #include "closest_point.h"
+#include "omp.h"
 
 points_distance nlogn_solution(point P[], size_t length, int num_processes)
 {
     assert(length >= 2);
     PyElement *Py = (PyElement *)malloc(length * sizeof(PyElement));
     sort_points(P, length, Py);
-    points_distance result = closest_points(P, Py, length);
+    points_distance result;
+    #pragma omp parallel shared(result) firstprivate(P, Py, length)
+    {
+        #pragma omp single
+        result = closest_points(P, Py, length);
+    }
     free(Py);
     return result;
 }

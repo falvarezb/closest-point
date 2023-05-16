@@ -164,12 +164,18 @@ points_distance closest_points(point Px[], PyElement Py[], size_t length)
     populateLy(Py, length, Ly, left_half_upper_bound);
     populateRy(Py, length, Ry, right_half_lower_bound);
 
+    
+    points_distance left_closest_points, right_closest_points;
     //closest points in the left half
-    points_distance left_closest_points = closest_points(Px, Ly, left_size);
-    float min_left_distance = left_closest_points.distance;
+    #pragma omp task shared(left_closest_points) firstprivate(Px, Ly, left_size)
+    left_closest_points = closest_points(Px, Ly, left_size);
+    
+    //closest points in the right half    
+    #pragma omp task shared(right_closest_points) firstprivate(Px, right_half_lower_bound, Ry, right_size)
+    right_closest_points = closest_points(Px + right_half_lower_bound, Ry, right_size);
 
-    //closest points in the right half
-    points_distance right_closest_points = closest_points(Px + right_half_lower_bound, Ry, right_size);
+    #pragma omp taskwait
+    float min_left_distance = left_closest_points.distance;
     float min_right_distance = right_closest_points.distance;
 
     //closest points from different halves
