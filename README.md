@@ -90,7 +90,7 @@ The C implementation also includes parallelization with OpenMP. One of the advan
 
 ## Lessons learnt
 
-#### PBT usefulness
+### PBT usefulness
 
 Property-based testing (PBT) is an excellent tool to catch edge cases and to get insights about the inner workings of an application.
 
