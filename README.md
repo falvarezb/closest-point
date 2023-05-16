@@ -73,7 +73,7 @@ keeping the same notation across different implementations makes it easy to unde
 - Rx, Ry = right half part of P sorted by coordinates _x_ and _y_ respectively
 
 
-### Details of parallel algorithm
+### Details of the parallel algorithms
 
 The parallel implementation is based on the [Fork-Join](https://en.wikipedia.org/wiki/Fork–join_model) model, that is well suited for _divide and conquer_ algorithms.
 
@@ -84,6 +84,8 @@ On the other hand, multi-process implementation in the JVM is not as straightfor
 Here's a visual represenation of the parallel algorithm in actio (either multi-thread or multi-process):
 
 ![parallel algorithm](images/closest_points_parallel.png)
+
+The C implementation also includes parallelization with OpenMP. One of the advantages of OpenMP is the ability to decorate a sequential application with pragmas to turn it into a parallel one. As a result, `nlogn_sol.c` can be compiled to be run in parallel or sequentially, depending on whether the compilation flag `-fopenmp` is added or not. 
 
 
 ## Lessons learnt
